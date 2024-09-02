@@ -1,0 +1,39 @@
+# mvn clean install -DskipTests && docker build . -t insider-backend && docker compose -f docker-compose-prod.yml up -d
+# docker-compose up
+# docker-compose down
+# docker exec -it postgres-sensera-se-backend psql -U admin -d postgres -c "CREATE DATABASE \"sensera-se-backend-psql-db\";"
+version: '3.9'
+
+services:
+  postgres-insider-oink-backend:
+    container_name: postgres-insider-oink-backend
+    image: postgres:15.3
+    volumes:
+      - postgres_data_20_08_24:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: insider-backend-psql-db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    ports:
+      - "5432:5432"
+    networks:
+      - lambda_net
+
+  insider-oink-backend:
+    container_name: insider-oink-backend
+    image: insider-backend:latest
+    ports:
+      - "8080:8080"
+    networks:
+      - lambda_net
+    depends_on:
+      - postgres-insider-oink-backend
+
+networks:
+  lambda_net:
+    name: lambda_net
+    driver: bridge
+
+volumes:
+  postgres_data_20_08_24:
+    name: postgres_data_20_08_24
