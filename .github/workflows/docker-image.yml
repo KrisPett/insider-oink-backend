@@ -16,6 +16,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+  permissions:
+    contents: read
+    packages: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -68,13 +72,3 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-#      - name: Build Docker image
-#        run: |
-#          docker build -t ghcr.io/krispett/insider-oink-backend:${{ github.sha }} .
-#
-#      - name: Log in to GitHub Container Registry
-#        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.repository_owner }} --password-stdin
-#
-#      - name: Push Docker image to GitHub Container Registry
-#        run: |
-#          docker push ghcr.io/krispett/insider-oink-backend:${{ github.sha }}
